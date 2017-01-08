@@ -37,6 +37,7 @@
 		<Unit filename="Simulator.cpp" />
 		<Unit filename="Simulator.hpp" />
 		<Unit filename="UI.cpp" />
+		<Unit filename="UI.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

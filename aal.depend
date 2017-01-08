@@ -1,25 +1,36 @@
 # depslib dependency file v1.0
-1482839216 source:/home/pirzmowski/Soft/aal/aal/main.cpp
+1483882544 source:/home/pirzmowski/Soft/aal/aal/main.cpp
 	"MyList.hpp"
 	"Simulator.hpp"
+	"UI.hpp"
 	<iostream>
 	<math.h>
 	<ctime>
 
-1482839241 source:/home/pirzmowski/Soft/aal/aal/MyList.cpp
+1483882513 source:/home/pirzmowski/Soft/aal/aal/MyList.cpp
 	"MyList.hpp"
+
+1483173026 /home/pirzmowski/Soft/aal/aal/MyList.hpp
+	<iostream>
+	<iomanip>
 	<math.h>
 
-1482160737 /home/pirzmowski/Soft/aal/aal/MyList.hpp
-	<iostream>
-
-1482833268 source:/home/pirzmowski/Soft/aal/aal/Simulator.cpp
+1483881774 source:/home/pirzmowski/Soft/aal/aal/Simulator.cpp
 	"Simulator.hpp"
+	<fstream>
 
-1482160268 /home/pirzmowski/Soft/aal/aal/Simulator.hpp
-	"MyList.hpp"
+1482875066 /home/pirzmowski/Soft/aal/aal/Simulator.hpp
 	<iostream>
 	<ctime>
+	"MyList.hpp"
 
-1482074566 source:/home/pirzmowski/Soft/aal/aal/UI.cpp
+1483880602 source:/home/pirzmowski/Soft/aal/aal/UI.cpp
+	"UI.hpp"
+
+1483477901 /home/pirzmowski/Soft/aal/aal/UI.hpp
+	"MyList.hpp"
+	"Simulator.hpp"
+	<fstream>
+	<iostream>
+	<ctime>
 

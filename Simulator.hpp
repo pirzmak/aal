@@ -1,10 +1,17 @@
 #ifndef SYMULATOR_INCLUDED
 #define SYMULATOR_INCLUDED
-#include "MyList.hpp"
 #include <iostream>
 #include <ctime>
 
-using namespace std;
+#include "MyList.hpp"
+
+
+/*
+    Struktura implementująca symulator zdarzen.
+
+    start - czas startu symulacji
+    MyIndexList - tablica indeksująca
+*/
 
 struct Simulator{
     clock_t start;

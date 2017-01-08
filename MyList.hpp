@@ -1,6 +1,8 @@
 #ifndef MYLIST_HPP_INCLUDED
 #define MYLIST_HPP_INCLUDED
 #include <iostream>
+#include <iomanip>
+#include <math.h>
 
 using namespace std;
 
@@ -13,7 +15,6 @@ kindOfEvent - rodzaj zdarzenia
 struct Event{
     double time;
     string kindOfEvent;
-    double secondTime;
     int num;
     double dt;
     Event *next;
@@ -21,6 +22,7 @@ struct Event{
 
     Event() : time(0.0), kindOfEvent("") {};
     Event(double t,string s) : time(t) , kindOfEvent(s) {};
+    Event(double t,string s,int n,double d) : time(t) , kindOfEvent(s), num(n), dt(d) {};
     Event(double t,string s,Event *n, Event *p) : time(t) , kindOfEvent(s) {
         next = n;
         prev = p;
@@ -44,7 +46,7 @@ struct Key{
     Key *prev;
 
     Key() : time(0.0), empty(false), counter(0){ };
-    Key(double t) : time(t), empty(true), counter(0){ };
+    Key(double t) : time(t), empty(true), counter(1){ };
     Key(double t,Key *n, Key *p,Event *e) : time(t), empty(false), counter(1){
         evt = e;
         next = n;
@@ -53,22 +55,22 @@ struct Key{
 };
 
 /*
-Struktura implementująca dwupoziomową listę indeksowaną.
+    Struktura implementująca dwupoziomową listę indeksowaną.
 
+    head - pierwszy element w liście kluczy
+    indexList - tablica indeksująca
+    current - index atualnego klucza
+    dT - różnica czasu
 */
-class MyIndexList{
-    public:
-    //pierwszy element w liście kluczy
+struct MyIndexList{
     Key *head;
-
-    //tablica indeksująca
     Key **indexList;
-
-    //index atualnego klucza
+    int maxElements;
+    int nrElements;
     int current;
     int dT;
 
-    MyIndexList(double t=1.0);
+    MyIndexList(double t=1.0,int maxEl = 100);
     void addEvent(Event *evt);
     int index(double time);
     void adjust(Key *list);

@@ -1,14 +1,19 @@
 #include "MyList.hpp"
-#include <math.h>
+#define INDEXNUM 5
 
-#define INDEXNUM 4
+//int MAXNRELEMENTS = 0; //maksymalna liczba elementów wyznaczana na podstawie liczby elementów
+//int NRELEMENTS = 0; //liczba elementów
 
-int MAXNRELEMENTS = 0; //maksymalna liczba elementów wyznaczana na podstawie liczby elementów
-int NRELEMENTS = 0; //liczba elementów
+/*
+    Konstruktor listy podwójnie indeksowanej.
 
-MyIndexList::MyIndexList(double t)
+    t - róznica czasu pomiędzy kolejnymi elementami listy nadrzędnej
+*/
+MyIndexList::MyIndexList(double t,int maxEl)
 {
     current = 0;
+    maxElements = maxEl;
+    nrElements = 0;
     dT = t;
     head = new Key(-1.1);
     head->evt = new Event(-1.1,"");
@@ -51,6 +56,11 @@ MyIndexList::MyIndexList(double t)
     head->evt->prev=indexList[INDEXNUM-1]->evt;
 }
 
+/*
+  Funkcja pomocnicza do wyliczania indeksu listy pierwotnej podczas wkładania elementu
+
+  time - czas zdarzenia
+*/
 int MyIndexList::index(double time)
 {
     double tmp1 = indexList[current]->time - dT; // dolna granica pierwszego przedziału
@@ -70,11 +80,12 @@ int MyIndexList::index(double time)
   Dodanie zdarzenia do listy indeksowanej. Jako argument przyjmuje zmienna Event.
   wykorzystuje funkcje index do obliczenia indeksu klucza wstawiania zdarzenia i
   funkcje adjust do ewentualnego wyrownania listy z kluczami
+
+  evt- wskaźnik na nowe zdarzenie
 */
 void MyIndexList::addEvent(Event *evt)
 {
-    NRELEMENTS++;
-    MAXNRELEMENTS = ceil(sqrt(NRELEMENTS));
+    nrElements++;
 
     Key *x = indexList[index(evt->time)];
 
@@ -83,7 +94,7 @@ void MyIndexList::addEvent(Event *evt)
     x=x->next;
     insertToList(evt, x->evt);
     //wyrównanie
-    if(x->counter < MAXNRELEMENTS)
+    if(x->counter < maxElements)
         x->counter++;
     else
         adjust(x);
@@ -91,13 +102,15 @@ void MyIndexList::addEvent(Event *evt)
 
 /*
   Funkcja wyrównująca liczbę zdarzeń w kazdym kluczu
+
+  list - wskaźnik na klucz listy podżędnej w którym liczba elementów jest za duża
 */
 void MyIndexList::adjust(Key *list)
 {
     Key *kp = list->prev;
     Event *e = kp->evt->next;
 
-    if(kp->empty || kp->counter == MAXNRELEMENTS)
+    if(kp->empty || kp->counter == maxElements)
     {
         //wstawienie nowego klucza
         kp = new Key();
@@ -114,7 +127,10 @@ void MyIndexList::adjust(Key *list)
 }
 
 /*
-    Włożenie zdarzenia do listy na odpowiedznie miejsce
+    Wkładanie zdarzenia do listy na odpowiedznie miejsce
+
+    evt - wskaźnik na wkładane zdarzenie
+    x - pierwsze zdarzenie do pasującego klucza listy podrzednej
 */
 void MyIndexList::insertToList(Event *evt,Event *x)
 {
@@ -127,6 +143,9 @@ void MyIndexList::insertToList(Event *evt,Event *x)
     evt->next->prev = evt;
 }
 
+/*
+    Usuniecie pierwszego elementu listy
+*/
 void MyIndexList::deleteFirst()
 {
     Event *tmp = head->evt->next;
@@ -134,10 +153,8 @@ void MyIndexList::deleteFirst()
     head->evt->next->prev=head->evt;
     head->evt->next = head->evt->next->next;
 
-    cout<<"Delete : "<<tmp->time<<" : "<<tmp->kindOfEvent<<endl;
-
     if(tmp->kindOfEvent!="Solid"){
-        NRELEMENTS--;
+        nrElements--;
     }
     delete tmp;
 
@@ -168,14 +185,14 @@ void MyIndexList::deleteFirst()
             pom->prev=k;
 
             k->evt = new Event(k->time,"Solid");
-            k->counter=0;
+            k->counter=1;
 
             insertToList(k->evt,head->prev->evt);
 
             if(k->evt->time>=head->prev->evt->prev->time)
             {
                 k->counter=head->prev->counter;
-                head->prev->counter=0;
+                head->prev->counter=1;
             }
             current = (current+1)%(INDEXNUM-1);
         }
@@ -187,6 +204,9 @@ void MyIndexList::deleteFirst()
 
 }
 
+/*
+    Prezentacja listy podrzędnej wraz z liczba zdarzen w kazdym kluczu
+*/
 void MyIndexList::show()
 {
 
@@ -194,13 +214,14 @@ void MyIndexList::show()
 
     while(x!=head)
     {
-        cout<<x->time<<" : "<<x->counter<<" "<<x->empty<<endl;
+        cout<<x->time<<" : "<<x->counter<<" "<<endl;
         x=x->next;
     }
-
-    cout<<NRELEMENTS<<endl;
 }
 
+/*
+    Czyszczenie struktury
+*/
 void MyIndexList::clear()
 {
 
@@ -237,9 +258,12 @@ void MyIndexList::clear()
         }
     }
 
-    NRELEMENTS=MAXNRELEMENTS=0;
+    nrElements=0;
 }
 
+/*
+    Prezentacja wzystkich zdarzen listy
+*/
 void MyIndexList::showEvents()
 {
 
@@ -252,7 +276,10 @@ void MyIndexList::showEvents()
     }
 }
 
+/*
+    Sprawdzenie czy struktura ma jakies elementy
+*/
 bool MyIndexList::empty()
 {
-    return !NRELEMENTS;
+    return !(nrElements);
 }
